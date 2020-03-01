@@ -18,10 +18,11 @@ object PatternMatching extends App {
       case Cons(0.0, _) => 0.0
       case Cons(x, xs) => x * product(xs)
     }
-// apply is a Variadic function
+
+    // apply is a Variadic function
     def apply[A](as: A*): List[A] =
-      if(as.isEmpty) Nil
-      else Cons(as.head, apply(as.tail:_*))
+      if (as.isEmpty) Nil
+      else Cons(as.head, apply(as.tail: _*))
 
     val x = List(1, 2, 3, 4, 5) match {
       case Cons(x, Cons(2, Cons(4, _))) => x
@@ -37,6 +38,23 @@ object PatternMatching extends App {
         case Cons(_, t) => t
       }
 
+    def setHead[A](lst: List[A], h: A): List[A] = {
+      lst match {
+        case Nil => Cons(h, Nil)
+        case Cons(_, y) => Cons(h, y)
+      }
+    }
+
+    def drop[A](l: List[A], n: Int): List[A] = {
+
+      if (n <= 0) l
+      else {
+        l match {
+          case Nil => Nil
+          case Cons(_, t) => drop(t, n -1)
+        }
+      }
+    }
   }
 
   println(List.sum(List(1, 2, 3)))
