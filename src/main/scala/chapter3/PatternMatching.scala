@@ -18,7 +18,7 @@ object PatternMatching extends App {
       case Cons(0.0, _) => 0.0
       case Cons(x, xs) => x * product(xs)
     }
-
+// apply is a Variadic function
     def apply[A](as: A*): List[A] =
       if(as.isEmpty) Nil
       else Cons(as.head, apply(as.tail:_*))
@@ -30,6 +30,12 @@ object PatternMatching extends App {
       case Cons(h, t) => h + sum(t)
       case _ => 101
     }
+
+    def tail[A](lst: List[A]): List[A] =
+      lst match {
+        case Nil => sys.error("no tail on Nil")
+        case Cons(_, t) => t
+      }
 
   }
 
