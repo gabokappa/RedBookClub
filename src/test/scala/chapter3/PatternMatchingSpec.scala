@@ -86,6 +86,20 @@ class PatternMatchingSpec extends AnyFreeSpec with Matchers {
       List.dropWhile(List(), (x: Int) => (x % 2) == 0) shouldBe List()
     }
 
+    // INIT
+
+    ".init should return List()" in {
+      List.init(List()) shouldBe List()
+    }
+
+    ".init should return List() when it has one element" in {
+      List.init(List(1)) shouldBe List()
+    }
+
+    ".init should return List(1, 2, 3)" in {
+      List.init(List(1, 2, 3, 4)) shouldBe List(1, 2, 3)
+    }
+
   }
 
 }
