@@ -122,6 +122,9 @@ class PatternMatchingSpec extends AnyFreeSpec with Matchers {
       List.length(List()) shouldBe 0
     }
 
+    ".sum3 should return 6 for an empty list" in {
+      List.sum3(List(1, 2, 3)) shouldBe 6
+    }
 
   }
 

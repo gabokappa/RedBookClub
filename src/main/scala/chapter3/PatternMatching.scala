@@ -96,11 +96,12 @@ object PatternMatching extends App {
         case Cons(x, xs) => foldLeft(xs, f(z, x))(f)
       }
 
-    def sum3(lst: List[Int]) = ???
+    def sum3(lst: List[Int]) =
+      foldLeft(lst, 0)(_ + _)
 
-    def product3(ls: List[Double]) = ???
-
-    def length2[A](ls: List[A]): Int = ???
+//    def product3(ls: List[Double]) = ???
+//
+//    def length2[A](ls: List[A]): Int = ???
 
 
   }
