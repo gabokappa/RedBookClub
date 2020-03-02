@@ -87,7 +87,8 @@ object PatternMatching extends App {
     def product2(ns: List[Double]) =
       foldRight(ns, 1.0)(_ * _)
 
-
+    def length[A](as: List[A]): Int =
+      foldRight(as, 0)((_, y) => 1 + y)
 
 
   }

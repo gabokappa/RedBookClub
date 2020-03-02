@@ -104,9 +104,22 @@ class PatternMatchingSpec extends AnyFreeSpec with Matchers {
       List.init(List(1, 2, 3, 4)) shouldBe List(1, 2, 3)
     }
 
-    // 3.8
+    // LENGTH
 
-    "foldRight deals with a Nil list" in {
+    ".length should return 3" in {
+      List.length(List(1, 2, 3)) shouldBe 3
+    }
+
+    ".length should return 2" in {
+      List.length(List("ant", "bear")) shouldBe 2
+    }
+
+    ".length should return 1" in {
+      List.length(List(1)) shouldBe 1
+    }
+
+    ".length should return 0 for an empty list" in {
+      List.length(List()) shouldBe 0
     }
 
   }
