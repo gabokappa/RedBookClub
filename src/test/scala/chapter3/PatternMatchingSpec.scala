@@ -122,6 +122,7 @@ class PatternMatchingSpec extends AnyFreeSpec with Matchers {
       List.length(List()) shouldBe 0
     }
 
+
   }
 
 }
