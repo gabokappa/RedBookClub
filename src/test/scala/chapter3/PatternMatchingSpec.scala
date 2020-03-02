@@ -104,6 +104,11 @@ class PatternMatchingSpec extends AnyFreeSpec with Matchers {
       List.init(List(1, 2, 3, 4)) shouldBe List(1, 2, 3)
     }
 
+    // 3.8
+
+    "foldRight deals with a Nil list" in {
+    }
+
   }
 
 }

@@ -95,5 +95,8 @@ object PatternMatching extends App {
   println(List.sum(List(1, 2, 3)))
   println(List.product(List(2.0, 3.0, 5.0)))
 
+  val chap38 = List.foldRight(List(1, 2, 3), Nil: List[Int])(Cons(_, _))
+  println(chap38)
+
 
 }
