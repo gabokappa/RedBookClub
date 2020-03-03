@@ -83,6 +83,7 @@ object PatternMatching extends App {
 
     def sum2(ns: List[Int]) =
       foldRight(ns, 0)((x, y) => x + y)
+    // could also be foldRight(ns, 0)(_ + _)
 
     def product2(ns: List[Double]) =
       foldRight(ns, 1.0)(_ * _)
@@ -99,9 +100,11 @@ object PatternMatching extends App {
     def sum3(lst: List[Int]) =
       foldLeft(lst, 0)(_ + _)
 
-//    def product3(ls: List[Double]) = ???
-//
-//    def length2[A](ls: List[A]): Int = ???
+    def product3(ls: List[Double]) =
+      foldLeft(ls, 1.0)(_ * _)
+
+    def length2[A](ls: List[A]): Int =
+      foldLeft(ls, 0)((x, y) => 1 + x)
 
 
   }
