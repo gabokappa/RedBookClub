@@ -160,6 +160,34 @@ class PatternMatchingSpec extends AnyFreeSpec with Matchers {
       List.flatMapWithFilter(List(1, 2, 3, 4))(x => x % 2 == 0) shouldBe List(2, 4)
     }
 
+    ".add2List should return List ( 2, 4, 6)" in {
+      List.add2List(List(1, 2, 3), List(1, 2, 3)) shouldBe List(2, 4, 6)
+    }
+
+    ".add2List should return List ( 5, 7, 9)" in {
+      List.add2List(List(1, 2, 3), List(4, 5, 6)) shouldBe List(5, 7, 9)
+    }
+
+    ".zipWith should return List( aA, bB, cC)" in {
+      List.zipWith(List("a", "b", "c"), List("A", "B", "C"))(_ + _) shouldBe List("aA", "bB", "cC")
+    }
+
+    ".zipWith should return List( 14, 25, 36)" in {
+      List.zipWith(List(1, 2, 3), List(4, 5, 6))(_.toString + _.toString) shouldBe List("14", "25", "36")
+    }
+
+    ".hasSubsequence should return true" in {
+      List.hasSubsequence(List(1, 2, 3), List(1, 2)) shouldBe true
+    }
+
+    ".hasSubsequence should also return true" in {
+      List.hasSubsequence(List(1, 2, 3), List(2, 3)) shouldBe true
+    }
+
+    ".hasSubsequence should return false" in {
+      List.hasSubsequence(List(1, 2, 3), List(1, 3)) shouldBe false
+    }
+
   }
 
 }
