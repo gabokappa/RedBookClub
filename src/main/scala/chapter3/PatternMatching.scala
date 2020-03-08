@@ -104,16 +104,68 @@ object PatternMatching extends App {
       foldLeft(ls, 1.0)(_ * _)
 
     def length2[A](ls: List[A]): Int =
-      foldLeft(ls, 0)((x, y) => 1 + x)
+      foldLeft(ls, 0)((x, _) => 1 + x)
 
+    def reverse[A](ls: List[A]) = {
+      foldLeft(ls, List[A]())((x, y) => Cons(y, x))
+    }
+
+    def flViaFR[A,B](l: List[A], z: B)(f: (B,A) => B): B =
+      foldRight(l, (b: B) => b)((a,g) => b => g(f(b,a)))(z)
+
+    def frViaFL[A,B](l: List[A], z: B)(f: (A,B) => B): B =
+      foldLeft(reverse(l), z)((b,a) => f(a,b))
+
+    def append2[A](l: List[A], r: List[A]): List[A] =
+      foldRight(l, r)(Cons(_, _))
+
+//    def append3[A](l: List[A], r: List[A]): List[A] =
+//      foldLeft(l, r)(Cons(l, Cons(r, l)))
+
+    def concatenate[A](l: List[List[A]]): List[A] =
+      foldRight(l, Nil: List[A])(append)
+
+    def addOne(ls: List[Int]) =
+      foldRight(ls, Nil: List[Int])((x, xs) => Cons(x + 1, xs))
+
+    def addOne2(ls: List[Int]) =
+      foldLeft(reverse(ls), Nil: List[Int])((acc, x) => Cons(x +1, acc))
+
+    def doubleToString(ls: List[Double]): List[String] =
+      foldRight(ls, Nil: List[String])((x, xs) => Cons(x.toString, xs))
+
+    def map[A, B](ls: List[A])(f: A => B): List[B] =
+      foldRight(ls, Nil: List[B])((x, xs) => Cons(f(x), xs))
+
+    def mapLeft[A, B](ls: List[A])(f: A => B): List[B] =
+      foldLeft(reverse(ls), Nil: List[B])((acc, x) => (Cons(f(x), acc)))
+
+    def filter[A](as: List[A])(f: A => Boolean): List[A] =
+      foldRight(as, Nil: List[A])((x, xs) => if (f(x)) Cons(x, xs) else xs)
+
+    def filterLeft[A](as: List[A])(f: A => Boolean): List[A] =
+      foldLeft(as, Nil: List[A])((xs, x) => if (f(x)) Cons(x, xs) else xs)
+
+    def flatMap[A, B](as: List[A])(f: A => List[B]): List[B] =
+      concatenate(map(as)(f))
+
+    def flatMapWithFilter[A](ls: List[A])(f: A => Boolean): List[A] =
+      flatMap(ls)(x => if (f(x)) List(x) else Nil)
+
+    def add2List(a: List[Int], b: List[Int]): List[Int] = (a, b) match {
+      case (Nil, _) => Nil
+      case(_, Nil) => Nil
+      case (Cons(h1, t1), Cons(h2, t2)) => Cons(h1+h2, add2List(t1, t2))
+    }
 
   }
 
   println(List.sum(List(1, 2, 3)))
   println(List.product(List(2.0, 3.0, 5.0)))
 
-  val chap38 = List.foldRight(List(1, 2, 3), Nil: List[Int])(Cons(_, _))
-  println(chap38)
+
+//  val chap38 = List.foldLeft(List(1, 2, 3), Nil: List[Int])((acc: Int , y: List[Int])=> Cons(y , acc))
+//  println(chap38)
 
 
 }

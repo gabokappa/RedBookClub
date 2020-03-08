@@ -134,6 +134,32 @@ class PatternMatchingSpec extends AnyFreeSpec with Matchers {
       List.length2(List(2, 3)) shouldBe 2
     }
 
+    // reverse
+
+    ".reverse should return List(3, 2, 1)" in {
+      List.reverse(List(1, 2, 3)) shouldBe List(3, 2, 1)
+    }
+
+    ".append should return List(1, 2, 3, 1)" in {
+      List.append2(List(1, 2, 3), List(1)) shouldBe List(1, 2 , 3, 1)
+    }
+
+    ".mapLeft should return List ( 2, 4, 6)" in {
+      List.mapLeft(List(1, 2, 3))(x => x * 2) shouldBe List(2, 4, 6)
+    }
+
+    ".addOne2 should return List ( 2, 3, 4)" in {
+      List.addOne2(List(1, 2, 3)) shouldBe List(2, 3, 4)
+    }
+
+    ".flatMap should return List ( 1, 1, 2, 2, 3, 3)" in {
+      List.flatMap(List(1, 2, 3))(x => List(x, x)) shouldBe List(1, 1, 2, 2, 3, 3)
+    }
+
+    ".flatMapWithFilter should return List(2, 4)" in {
+      List.flatMapWithFilter(List(1, 2, 3, 4))(x => x % 2 == 0) shouldBe List(2, 4)
+    }
+
   }
 
 }
