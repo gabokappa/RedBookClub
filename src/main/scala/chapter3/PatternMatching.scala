@@ -176,6 +176,7 @@ object PatternMatching extends App {
       case Cons(_, t) => hasSubsequence(t, sub)
     }
 
+
   }
 
   println(List.sum(List(1, 2, 3)))
