@@ -1,7 +1,7 @@
 package chapter4
 
 
-object ErrorsAndExceptions extends App {
+object ErrorsAndExceptions {
 
   sealed trait Option[+A] {
 
@@ -89,10 +89,4 @@ object ErrorsAndExceptions extends App {
   case class Some[+A](get: A) extends Option[A]
   case object None extends Option[Nothing]
 
-  object Option {
-
-
-
-
-  }
 }
