@@ -76,6 +76,11 @@ object RNG extends App {
       (f(a), rng2)
     }
 
+  def nonNegativeEven: Rand[Int] =
+    map(nonNegativeInt)(i => i - i % 2)
+
+  // 6.5
+
   def double4: Rand[Double] =
     map(nonNegativeInt)(_ / (Int.MaxValue.toDouble + 1))
 
@@ -83,6 +88,68 @@ object RNG extends App {
 
   val _double: Rand[Double] =
     map(nonNegativeInt)(_ /(Int.MaxValue.toDouble+ 1))
+
+  // exercise 6.6 a combinator to combine two RNG actions into one using a binary rather than unary function
+
+  def map2[A, B, C](ra: Rand[A], rb: Rand[B])(f: (A, B) => C): Rand[C] =
+    rng => {
+      val (a, rng2) = ra(rng)
+      val (b, rng3) = rb(rng2)
+      (f(a, b), rng3)
+    }
+
+  // book examples
+
+  def both[A, B](ra: Rand[A], rb: Rand[B]): Rand[(A, B)] =
+    map2(ra, rb)((_, _))
+
+  val randIntDouble: Rand[(Int, Double)] =
+    both(int, double)
+
+  val randDoubleInt: Rand[(Double, Int)] =
+    both(double, int)
+
+  def sequence[A](fs: List[Rand[A]]): Rand[List[A]] =
+    fs.foldRight(unit(List[A]()))((f, acc) => map2(f, acc)(_ :: _))
+
+  //below method not working needs to be reversed
+  def sequence2[A](fs: List[Rand[A]]): Rand[List[A]] = {
+    fs.foldLeft(unit(List[A]()))((acc, f) => map2(f, acc)(_ :: _))
+  }
+
+  // book example
+
+  def nonNegativeLessThan(n: Int): Rand[Int] = { rng =>
+    val (i, rng2) = nonNegativeInt(rng)
+    val mod = i % n
+    if (i + (n-1) - mod >= 0)
+      (mod, rng2)
+    else nonNegativeLessThan(n)(rng)
+  }
+
+  def flatMap[A, B](f: Rand[A])(g: A => Rand[B]): Rand[B] =
+    rng => {
+      val (a, r1) = f(rng)
+      g(a)(r1) // new state being passed along
+    }
+
+  def nonNegativeLessThan2(n: Int): Rand[Int] = {
+    flatMap(nonNegativeInt) { i =>
+      val mod = i % n
+      if (i + (n-1) - mod >= 0) unit(mod) else nonNegativeLessThan(n)
+    }
+  }
+
+def _map[A, B](s: Rand[A])(f: A => B) =
+  flatMap(s)(a => unit(f(a)))
+
+  def _map2[A, B, C](ra: Rand[A], rb: Rand[B])(f: (A, B) => C): Rand[C] =
+    flatMap(ra)(a => map(rb)(b => f(a, b)))
+
+  def rollDie: Rand[Int] = map(nonNegativeLessThan(6))( _ + 1)
+
+
+  //// my own println tests below
 
  val rng = SimpleRNG(42)
   val (n1, rng2) = rng.nextInt
@@ -94,6 +161,10 @@ object RNG extends App {
   println(double(rng))
   println(16159453 / (Int.MaxValue.toDouble + 1))
   println(intDouble(rng))
+println(s" this is non negative even method ${nonNegativeEven(rng)}")
+  println(int(rng))
 
+  val x = int(rng)
+  println(int(x._2))
 
 }
