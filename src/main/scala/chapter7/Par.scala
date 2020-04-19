@@ -3,7 +3,7 @@ package chapter7
 import java.util.concurrent._
 
 object Par {
-//  type Par[A] = ExecutorService => Future[A]
+ type Par[A] = ExecutorService => Future[A]
 
   def unit[A](a: A): Par[A] = (es: ExecutorService) => UnitFuture(a)
 
@@ -15,10 +15,9 @@ object Par {
   }
 
   def map2[A,B,C](a: Par[A], b: Par[B])(f: (A,B) => C): Par[C] =
-    (es: ExecutorService) => {
-      val af = a(es)
-      val bf = b(es)
-      UnitFuture(f(af.get, bf.get))
+    es => {
+      val (af, bf) = (a(es), b(es))
+      Map2Future(af, bf, f)
     }
 
   def fork[A](a: => Par[A]): Par[A] =
@@ -26,6 +25,11 @@ object Par {
       def call = a(es).get
     })
 
+
+  case class Map2Future[A, B, C](a: Future[A], b: Future[B], f: (A, B) => C) extends Future[C] {
+
+
+  }
 
   def run[A](s: ExecutorService)(a: Par[A]): Future[A] = a(s)
 

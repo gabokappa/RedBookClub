@@ -1,7 +1,5 @@
 package chapter6
 
-import chapter6.RNG.sequence
-
 trait RNG {
   def nextInt: (Int, RNG)
 
@@ -114,7 +112,7 @@ object RNG extends App {
   def sequence[A](fs: List[Rand[A]]): Rand[List[A]] =
     fs.foldRight(unit(List[A]()))((f, acc) => map2(f, acc)(_ :: _))
 
-  //below method not working needs to be reversed
+  //below method maybe now working with the reverse method added after fs.
   def sequence2[A](fs: List[Rand[A]]): Rand[List[A]] = {
     fs.reverse.foldLeft(unit(List[A]()))((acc, f) => map2(f, acc)(_ :: _))
   }
@@ -142,7 +140,7 @@ object RNG extends App {
     }
   }
 
-def _map[A, B](s: Rand[A])(f: A => B) =
+def _map[A, B](s: Rand[A])(f: A => B): Rand[B] =
   flatMap(s)(a => unit(f(a)))
 
   def _map2[A, B, C](ra: Rand[A], rb: Rand[B])(f: (A, B) => C): Rand[C] =
@@ -157,10 +155,14 @@ def _map[A, B](s: Rand[A])(f: A => B) =
 
 
   case class State[S, +A](run: S => (A, S)) {
+
+
     def map[B](f: A => B): State[S, B] =
-      flatMap(a => unit(f(a)))
+      flatMap(a => State.unit(f(a)))
+
     def map2[B,C](sb: State[S, B])(f: (A, B) => C): State[S, C] =
       flatMap(a => sb.map(b => f(a, b)))
+
     def flatMap[B](f: A => State[S, B]): State[S, B] = State(s => {
       val (a, s1) = run(s)
       f(a).run(s1)
@@ -173,8 +175,24 @@ def _map[A, B](s: Rand[A])(f: A => B) =
     def unit[S, A](a: A): State[S, A] =
       State(s => (a, s))
 
+
     def sequence[S, A](l: List[State[S, A]]): State[S, List[A]] =
       l.reverse.foldLeft(unit[S, List[A]](List()))((acc, f) => f.map2(acc)(_ :: _))
+
+    // Ed's solution'
+
+//    def sequence[A](fs: List[Rand[A]]): Rand[List[A]] = {
+//      def loop(l: List[Rand[A]], agg: Rand[List[A]]): Rand[List[A]] = {
+//        l match {
+//          case rand :: xs =>
+//            val apply: Rand[List[A]] = map2(agg, rand)((list, v) => list :+ v)
+//            loop(xs, apply)
+//          case Nil => agg
+//        }
+//      }
+//      loop(fs, rng => (Nil, rng))
+//    }
+
 
     def modify[S](f: S => S): State[S, Unit] = for {
       s <- get // Gets the current state and assigns it to `s`.
